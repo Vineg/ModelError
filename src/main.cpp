@@ -148,12 +148,12 @@ int main(int argc, char *argv[])
     int totalFetched = 0;
     unsigned long vertices_count = fine_model->vertices.size();
     float dists[vertices_count];
-    float maxDist = -infinityf();
+    float maxDist = -INFINITY;
     float total_dist = 0;
     cout << "calculating" << flush;
     for (uint i = 0; i < vertices_count; i++) {
         double3 vert = fine_model->vertices[i];
-        float dist = infinityf();
+        float dist = INFINITY;
         float query_radius = start_query_radius;
         while (dist > query_radius) {
             const double3 &query_vec = e * query_radius;
