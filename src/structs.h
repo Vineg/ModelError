@@ -8,6 +8,8 @@
 
 using namespace std;
 
+typedef	unsigned int uint;
+
 struct uint3 { uint32_t x, y, z; };
 struct uchar3 { uint8_t r, g, b; };
 struct double3;
