@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <cmath>
+#include <algorithm>
 
 #include "tinyply.h"
 #include "Point.h"
