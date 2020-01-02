@@ -79,6 +79,7 @@ shared_ptr<PlyFileData> read_ply_file(const string & filepath)
     catch (const exception & e)
     {
         cerr << "Caught tinyply exception: " << e.what() << endl;
+        return shared_ptr<PlyFileData>();
     }
 }
 
@@ -119,8 +120,8 @@ int main(int argc, char *argv[])
     shared_ptr<PlyFileData> coarse_model = read_ply_file(argv[2]);
     char* out_path = argv[3];
     auto box2 = Box(Point({0.0, 0.0, 0.0}), Point({1.0, 1.0, 1.0}));
-    double3 min = {infinity(), infinity(), infinity()};
-    double3 max = {-infinity(), -infinity(), -infinity()};
+    double3 min = {INFINITY, INFINITY, INFINITY};
+    double3 max = {-INFINITY, -INFINITY, -INFINITY};
     for (auto & vert : coarse_model->vertices) {
         min = min.min(vert);
         max = max.max(vert);
@@ -129,7 +130,7 @@ int main(int argc, char *argv[])
     auto coarse_extents = Box(min, max);
     auto n1 = make_shared<Node<Face>>(coarse_extents);
     cout << "building tree" << flush;
-    for (int i = 0; i < coarse_model->triangles.size(); i++) {
+    for (uint i = 0; i < coarse_model->triangles.size(); i++) {
         n1->put(make_shared<Face>(coarse_model->triangles[i]));
         if ((i % (coarse_model->triangles.size() / 10 + 1)) == 0) {
             cout << "." << flush;
@@ -150,7 +151,7 @@ int main(int argc, char *argv[])
     float maxDist = -infinityf();
     float total_dist = 0;
     cout << "calculating" << flush;
-    for (int i = 0; i < vertices_count; i++) {
+    for (uint i = 0; i < vertices_count; i++) {
         double3 vert = fine_model->vertices[i];
         float dist = infinityf();
         float query_radius = start_query_radius;
@@ -182,7 +183,7 @@ int main(int argc, char *argv[])
     cout << endl;
 
     float average_dist = total_dist / vertices_count;
-    for (int i = 0; i < vertices_count; ++i) {
+    for (uint i = 0; i < vertices_count; ++i) {
         fine_model->colors.push_back(jet_color(std::min(1.0f, dists[i] / (average_dist * 5))));
     }
 
