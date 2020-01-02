@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Face.h"
 
 Face::Face(vector<double3 *> points) : p1(points[0]), p2(points[1]), p3(points[2]), storedBounds(

@@ -1,6 +1,7 @@
 #ifndef MODELERROR_FACE_H
 #define MODELERROR_FACE_H
 
+#include <algorithm>
 
 #include "double3.h"
 #include "Box.h"

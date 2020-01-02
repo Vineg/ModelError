@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cmath>
 #include <limits>
+#include <algorithm>
 
 #include "tinyply.h"
 #include "Point.h"
