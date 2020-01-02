@@ -27,6 +27,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: configure
       run: mkdir build && cd build && cmake ..
+      shell: cmd
     - name: build
       run: cmake --build build --config Debug
     - name: test
