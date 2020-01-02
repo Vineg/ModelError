@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <cmath>
-#include <algorithm>
+#include <limits>
 
 #include "tinyply.h"
 #include "Point.h"
@@ -125,8 +125,9 @@ int main(int argc, char *argv[])
     shared_ptr<PlyFileData> coarse_model = read_ply_file(argv[2]);
     char* out_path = argv[3];
     auto box2 = Box(Point({0.0, 0.0, 0.0}), Point({1.0, 1.0, 1.0}));
-    double3 min = {INFINITY, INFINITY, INFINITY};
-    double3 max = {-INFINITY, -INFINITY, -INFINITY};
+    auto inf_double = numeric_limits<double>::infinity();
+    double3 min = {inf_double, inf_double, inf_double};
+    double3 max = {-inf_double, -inf_double, -inf_double};
     for (auto & vert : coarse_model->vertices) {
         min = min.min(vert);
         max = max.max(vert);
@@ -153,7 +154,7 @@ int main(int argc, char *argv[])
     int totalFetched = 0;
     unsigned long vertices_count = fine_model->vertices.size();
     float dists[vertices_count];
-    float maxDist = -INFINITY;
+    float maxDist = -numeric_limits<float>::infinity();
     float total_dist = 0;
     cout << "calculating" << flush;
     for (uint i = 0; i < vertices_count; i++) {
