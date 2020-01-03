@@ -33,3 +33,7 @@ jobs:
     - name: test
       run: cd build && ctest
       shell: cmd
+    - uses: actions/upload-artifact@v1
+      with:
+        name: ModelError.exe
+        path: build/ModelError.exe
