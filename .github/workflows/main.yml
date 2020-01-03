@@ -35,5 +35,5 @@ jobs:
       shell: cmd
     - uses: actions/upload-artifact@v1
       with:
-        name: ModelError.exe
-        path: build/ModelError.exe
+        name: ModelError
+        path: build/Debug/ModelError.exe
