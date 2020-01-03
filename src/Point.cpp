@@ -3,11 +3,20 @@
 
 using namespace std;
 
+Point::Point() : vector<double>() {
+}
+
 Point::Point(double3 data) : vector<double>({data.x, data.y, data.z}) {
 }
 
+Point::Point(size_type size) : vector<double>(size) {
+}
+
+Point::Point(initializer_list<double> d) : vector<double>(d) {
+}
+
 Point Point::nthCombination(uint n, Point other) {
-    Point result = Point(this->size());
+    Point result = Point(size());
     for (uint i = 0; i < size(); i++) {
         if ((n & (1u << i)) == 0) {
             result[i] = (*this)[i];

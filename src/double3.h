@@ -3,13 +3,15 @@
 
 #include <vector>
 #include "structs.h"
+
 struct float3;
 
 struct double3 {
+
     double x, y, z;
 
     double3 (double x, double y, double z): x(x), y(y), z(z){};
-    double3 (float3& f);
+    double3 (float3 &f);
 
     double3 operator + (const double3 right);
     double3 operator - (const double3 right);

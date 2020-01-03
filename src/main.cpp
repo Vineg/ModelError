@@ -16,7 +16,7 @@
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
-#endif M_PI
+#endif //M_PI
 
 
 #define TINYPLY_IMPLEMENTATION true
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     shared_ptr<PlyFileData> fine_model = read_ply_file(argv[1]);
     shared_ptr<PlyFileData> coarse_model = read_ply_file(argv[2]);
     char* out_path = argv[3];
-    auto box2 = Box(Point({0.0, 0.0, 0.0}), Point({1.0, 1.0, 1.0}));
+    auto box2 = Box({0.0, 0.0, 0.0}, {1.0, 1.0, 1.0});
     auto inf_double = numeric_limits<double>::infinity();
     double3 min = {inf_double, inf_double, inf_double};
     double3 max = {-inf_double, -inf_double, -inf_double};

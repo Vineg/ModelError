@@ -5,9 +5,9 @@ Box::Box(Box *toClone) {
     end = toClone->end;
 }
 
-Box::Box(Point start, Point end) {
-    this->start = move(start);
-    this->end = move(end);
+Box::Box(const Point start, const Point end) {
+    this->start = start;
+    this->end = end;
 }
 
 bool Box::intersects(const Box &other) {
