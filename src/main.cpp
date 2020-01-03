@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     auto query_box = make_shared<Box>(min, max);
     int totalFetched = 0;
     const unsigned long vertices_count = fine_model->vertices.size();
-    float dists[vertices_count];
+    vector<double> distances(vertices_count);
     float maxDist = -numeric_limits<float>::infinity();
     float total_dist = 0;
     cout << "calculating" << flush;
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
 
             n1->query(*query_box, query_result);
 
-            for (auto result_shape : query_result) {
+            for (auto &result_shape : query_result) {
                 dist = std::min(dist, result_shape->dist(vert));
             }
             totalFetched += query_result.size();
@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
 
             query_radius *= 1.5;
         }
-        dists[i] = dist;
+        distances[i] = dist;
         total_dist += dist;
         if (dist > maxDist) {
             maxDist = dist;
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 
     float average_dist = total_dist / vertices_count;
     for (uint i = 0; i < vertices_count; ++i) {
-        fine_model->colors.push_back(jet_color(std::min(1.0f, dists[i] / (average_dist * 5))));
+        fine_model->colors.push_back(jet_color(std::min(1.0, distances[i] / (average_dist * 5))));
     }
 
     write_ply_model(out_path, fine_model);
