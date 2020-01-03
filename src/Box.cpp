@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Box.h"
 
 Box::Box(Box *toClone) {

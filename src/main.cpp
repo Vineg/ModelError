@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
     vector<shared_ptr<Face>> query_result{};
     auto query_box = make_shared<Box>(min, max);
     int totalFetched = 0;
-    unsigned long vertices_count = fine_model->vertices.size();
+    const unsigned long vertices_count = fine_model->vertices.size();
     float dists[vertices_count];
     float maxDist = -numeric_limits<float>::infinity();
     float total_dist = 0;
