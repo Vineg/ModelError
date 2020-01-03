@@ -119,7 +119,7 @@ void write_ply_model(const string & filePath, shared_ptr<geometry> model)
 int main(int argc, char *argv[])
 {
     if (argc < 4) {
-        cout << "usage: " << endl  << "ModelError" << " realModel.ply expectedModel.ply out.ply";
+        cout << "usage: " << endl  << "ModelError" << " actualModel.ply expectedModel.ply out.ply";
         return EXIT_SUCCESS;
     }
     shared_ptr<PlyFileData> fine_model = read_ply_file(argv[1]);
