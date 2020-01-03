@@ -32,3 +32,8 @@ jobs:
       run: cmake --build build --config Debug
     - name: test
       run: cd build && ctest
+      shell: cmd
+    - uses: actions/upload-artifact@v1
+      with:
+        name: ModelError-${{ matrix.os }}
+        path: build/Debug/ModelError.exe
