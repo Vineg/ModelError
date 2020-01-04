@@ -14,7 +14,7 @@ struct Face : public Shape {
     double3* p3;
     Box storedBounds;
     explicit Face(vector<double3*> points);
-    float dist(double3 point);
+    double dist(double3 point);
     Box bounds() override;
 };
 

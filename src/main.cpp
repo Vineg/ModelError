@@ -14,19 +14,11 @@
 #include "Node.h"
 #include "PlyFileData.h"
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif //M_PI
-
-
-#define TINYPLY_IMPLEMENTATION true
 
 using namespace std;
 using tinyply::PlyData;
 using tinyply::Type;
 using tinyply::PlyFile;
-
-//struct double3 { double x, y, z; };
 
 shared_ptr<PlyFileData> read_ply_file(const string & filepath)
 {
@@ -46,20 +38,15 @@ shared_ptr<PlyFileData> read_ply_file(const string & filepath)
         file.parse_header(*file_stream);
 
         shared_ptr<PlyData> vertices, normals, faces, texcoords;
-        // The header information can be used to programmatically extract properties on elements
-        // known to exist in the header prior to reading the data. For brevity of this sample, properties
-        // like vertex position are hard-coded:
+
         try { vertices = file.request_properties_from_element("vertex", { "x", "y", "z" }); }
         catch (const exception & e) { cerr << "tinyply exception: " << e.what() << endl; }
 
-        // Providing a list size hint (the last argument) is a 2x performance improvement. If you have
-        // arbitrary ply files, it is best to leave this 0.
         try { faces = file.request_properties_from_element("face", { "vertex_indices" }, 3); }
         catch (const exception & e) { cerr << "tinyply exception: " << e.what() << endl; }
 
         file.read(*file_stream);
 
-        // type casting to your own native types - Option A
         {
             std::vector<float3> verts(vertices->count);
             const size_t numVerticesBytes = vertices->buffer.size_bytes();
@@ -137,17 +124,21 @@ int main(int argc, char *argv[])
     auto coarse_extents = Box(min, max);
     auto n1 = make_shared<Node<Face>>(coarse_extents);
     cout << "building tree" << flush;
+    double average_triangle_size = 0;
     for (uint i = 0; i < coarse_model->triangles.size(); i++) {
-        n1->put(make_shared<Face>(coarse_model->triangles[i]));
+        Face &triangle = coarse_model->triangles[i];
+        average_triangle_size += triangle.bounds().maxWidth();
+        n1->put(make_shared<Face>(triangle));
         if ((i % (coarse_model->triangles.size() / 10 + 1)) == 0) {
             cout << "." << flush;
         }
     }
     cout << endl;
+    average_triangle_size /= coarse_model->triangles.size();
 
     //reduce query radius to have smaller results
-    float radius_reduce = 100.0;
-    float start_query_radius = sqrt(M_PI * (max - min).length_sq() / coarse_model->vertices.size()) / radius_reduce;
+    double radius_reduce = 16;
+    double start_query_radius = average_triangle_size / radius_reduce;
     double3 e = {1, 1, 1};
 
     vector<shared_ptr<Face>> query_result{};
@@ -155,13 +146,14 @@ int main(int argc, char *argv[])
     int totalFetched = 0;
     const unsigned long vertices_count = fine_model->vertices.size();
     vector<double> distances(vertices_count);
-    float maxDist = -numeric_limits<float>::infinity();
-    float total_dist = 0;
+    auto DOUBLE_INFINITY = numeric_limits<double>::infinity();
+    double maxDist = -DOUBLE_INFINITY;
+    double total_dist = 0;
     cout << "calculating" << flush;
     for (uint i = 0; i < vertices_count; i++) {
         double3 vert = fine_model->vertices[i];
-        float dist = INFINITY;
-        float query_radius = start_query_radius;
+        double dist = DOUBLE_INFINITY;
+        double query_radius = start_query_radius;
         while (dist > query_radius) {
             const double3 &query_vec = e * query_radius;
             query_box->start = vert - query_vec;
@@ -189,9 +181,9 @@ int main(int argc, char *argv[])
     }
     cout << endl;
 
-    float average_dist = total_dist / vertices_count;
+    double average_dist = total_dist / vertices_count;
     for (uint i = 0; i < vertices_count; ++i) {
-        fine_model->colors.push_back(jet_color(std::min(1.0, distances[i] / (average_dist * 5))));
+        fine_model->colors.push_back(jet_color(std::min(1.0, distances[i] / (average_dist * 5.0))));
     }
 
     write_ply_model(out_path, fine_model);

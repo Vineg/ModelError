@@ -6,7 +6,7 @@ Face::Face(vector<double3 *> points) : p1(points[0]), p2(points[1]), p3(points[2
         p1->min(*p2).min(*p3), p1->max(*p2).max(*p3)
 ) {}
 
-float Face::dist(double3 point) {
+double Face::dist(double3 point) {
     double3 &lp1 = *p1;
     double3 &lp2 = *p2;
     double3 &lp3 = *p3;
